@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/editor/">
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=3.0.0">
+  <link rel="apple-touch-icon" href="icon.png?v=3.0.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMS Lemmings Pack Editor</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #10101e; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    // Pack Editor is local/export-first and does not require a project key.
+    window._urlToken = 'expanded-local';
+  </script>
+  <script src="tilesets.js?v=player-merge-0.1"></script>
+  <script src="webapi.js?v=player-merge-0.1"></script>
+  <script src="app.js?v=player-merge-0.1"></script>
+</body>
+</html>

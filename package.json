@@ -1,0 +1,46 @@
+{
+  "name": "sms-lemmings-web",
+  "version": "1.0.0",
+  "description": "Sega Master System Lemmings Recreation - Web Build",
+  "main": "desktop-main.js",
+  "scripts": {
+    "start": "node server.js",
+    "web": "node server.js",
+    "desktop": "electron desktop-main.js",
+    "desktop:windowed": "electron desktop-main.js --windowed",
+    "desktop:dev": "electron desktop-main.js --windowed --devtools",
+    "desktop:pack": "electron-builder --win portable"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "electron": "latest",
+    "electron-builder": "latest"
+  },
+  "build": {
+    "appId": "uk.callum.smslemmings",
+    "productName": "SMS Lemmings",
+    "asar": false,
+    "files": [
+      "desktop-main.js",
+      "server.js",
+      "package.json",
+      "public/**/*",
+      "!public/editor/**",
+      "!public/custom-levels/**",
+      "!public/.editor-autosaves/**",
+      "!public/bundled-levels/extra_backups/**",
+      "!public/debug.html",
+      "!public-release/**",
+      "!*.zip",
+      "!*.7z",
+      "!*.rar"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  }
+}

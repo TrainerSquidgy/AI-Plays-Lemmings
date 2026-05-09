@@ -1,0 +1,123 @@
+; GRASS
+GRASSData_List0: ; Non-Collidable
+.db $67 $68 $5D $6F $2C $2D $1E $1F $20 $21 $22 $24 $25 $26 $27 $28
+.db $4A $4B $4C $4D $4E $4F $50 $51 $54 $55 $56 $57 $00
+GRASSData_List1: ; Steel
+.db $A1 $A2 $A3 $A4 $A5 $A6 $A7 $A8 $6B $6C $72 $73 $90 $91 $92 $93
+.db $94 $00
+GRASSData_List2: ; Water
+.db $6D $74 $AC $AD $00
+GRASSData_List3: ; Other Toxic Blocks
+.db $00
+GRASSData_List4: ; One-Way Right
+.db $AE $00
+GRASSData_List5: ; One-Way Left
+.db $A9 $00
+
+; SAND1
+SAND1Data_List0: ; Non-Collidable
+.db $5B $5C $5D $5E $5F $60 $61 $62 $63 $64 $65 $66 $13 $14 $15 $16
+.db $17 $18 $19 $1A $1B $1C $20 $21 $FC $FD $FE $FF $00
+SAND1Data_List1: ; Steel
+.db $86 $87 $8C $8D $8E $8F $90 $97 $A0 $00
+SAND1Data_List2: ; Water
+.db $A3 $A4 $00
+SAND1Data_List3: ; Other Toxic Blocks
+.db $FC $FD $00
+SAND1Data_List4: ; One-Way Right
+.db $FB $00
+SAND1Data_List5: ; One-Way Left
+.db $FA $00
+
+; FIRE
+FIREData_List0: ; Non-Collidable
+.db $43 $44 $45 $4B $4C $4D $4E $4F $50 $52 $53 $54 $55 $56 $57 $58
+.db $59 $5A $5B $5C $5D $5E $5F $60 $61 $62 $63 $64 $21 $22 $23 $24
+.db $25 $2D $2E $2F $30 $31 $3D $3E $00
+FIREData_List1: ; Steel
+.db $28 $34 $65 $66 $67 $68 $69 $6A $6B $6C $6D $00
+FIREData_List2: ; Water
+.db $00
+FIREData_List3: ; Other Toxic Blocks
+.db $70 $71 $8B $29 $2A $2B $2C $35 $36 $37 $38 $00
+FIREData_List4: ; One-Way Right
+.db $00
+FIREData_List5: ; One-Way Left
+.db $D7 $00
+
+; ICE
+ICEData_List0: ; Non-Collidable
+.db $5E $5F $60 $61 $63 $64 $65 $66 $68 $69 $6A $6B $1E $1F $20 $21
+.db $22 $23 $24 $25 $26 $27 $2D $2E $F2 $F3 $00
+ICEData_List1: ; Steel
+.db $54 $78 $55 $59 $7D $5A $5C $7F $5D $00
+ICEData_List2: ; Water
+.db $7E $80 $00
+ICEData_List3: ; Other Toxic Blocks
+.db $F2 $F3 $00
+ICEData_List4: ; One-Way Right
+.db $E6 $00
+ICEData_List5: ; One-Way Left
+.db $E5 $00
+
+; BRICK
+BRICKData_List0: ; Non-Collidable
+.db $2F $30 $31 $32 $35 $36 $37 $38 $3B $3C $3D $3E $D5 $68 $D6 $E7
+.db $D7 $D8 $D9 $DA $25 $26 $27 $28 $29 $2A $2B $2C $2D $2E $33 $34
+.db $00
+BRICKData_List1: ; Steel
+.db $5C $64 $65 $06 $07 $12 $13 $1C $1D $00
+BRICKData_List2: ; Water
+.db $66 $67 $00
+BRICKData_List3: ; Other Toxic Blocks
+.db $98 $99 $9A $9B $9C $9D $9F $A0 $00
+BRICKData_List4: ; One-Way Right
+.db $E6 $00
+BRICKData_List5: ; One-Way Left
+.db $C6 $00
+
+; SEGA1
+SEGA1Data_List0: ; Non-Collidable
+.db $00
+SEGA1Data_List1: ; Steel
+.db $00
+SEGA1Data_List2: ; Water
+.db $00
+SEGA1Data_List3: ; Other Toxic Blocks
+.db $00
+SEGA1Data_List4: ; One-Way Right
+.db $00
+SEGA1Data_List5: ; One-Way Left
+.db $00
+
+; SAND2
+SAND2Data_List0: ; Non-Collidable
+.db $2D $2E $2F $30 $31 $3F $40 $41 $42 $43 $81 $82 $83 $84 $87 $88
+.db $89 $8A $8D $8E $8F $90 $47 $48 $E3 $E1 $E0 $95 $F4 $F5 $F6 $F7
+.db $00
+SAND2Data_List1: ; Steel
+.db $85 $86 $8B $8C $92 $93 $BE $00
+SAND2Data_List2: ; Water
+.db $91 $94 $00
+SAND2Data_List3: ; Other Toxic Blocks
+.db $F4 $F5 $00
+SAND2Data_List4: ; One-Way Right
+.db $E5 $00
+SAND2Data_List5: ; One-Way Left
+.db $E4 $00
+
+; SEGA2
+SEGA2Data_List0: ; Non-Collidable
+.db $66 $67 $68 $69 $76 $77 $78 $79 $7F $80 $81 $82 $8B $8C $8D $8E
+.db $1D $1E $0B $0C $0D $0E $0F $12 $13 $14 $15 $16 $83 $8F $92 $95
+.db $00
+SEGA2Data_List1: ; Steel
+.db $21 $22 $23 $2E $2F $30 $3B $3C $3D $00
+SEGA2Data_List2: ; Water
+.db $94 $98 $00
+SEGA2Data_List3: ; Other Toxic Blocks
+.db $00
+SEGA2Data_List4: ; One-Way Right
+.db $C1 $C2 $00
+SEGA2Data_List5: ; One-Way Left
+.db $BF $C0 $00

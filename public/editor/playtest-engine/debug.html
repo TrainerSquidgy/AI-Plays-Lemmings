@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Debug Panel</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #1e1e1e; color: #d4d4d4; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; font-size: 13px; }
+        h1 { font-size: 18px; margin-bottom: 20px; color: #4ec9b0; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        h2 { font-size: 14px; margin: 20px 0 10px 0; color: #569cd6; }
+        .control-group { margin-bottom: 15px; background: #252526; padding: 12px; border-radius: 4px; }
+        .control { margin-bottom: 12px; }
+        label { display: block; margin-bottom: 4px; color: #9cdcfe; font-size: 12px; }
+        input[type="range"] { width: 100%; height: 4px; background: #3e3e42; outline: none; border-radius: 2px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: #4ec9b0; cursor: pointer; border-radius: 50%; }
+        input[type="number"] { width: 100%; padding: 6px; background: #3e3e42; border: 1px solid #555; color: #d4d4d4; border-radius: 3px; font-size: 12px; }
+        .value-display { display: inline-block; float: right; font-weight: bold; color: #4ec9b0; }
+        button { width: 100%; padding: 8px; background: #0e639c; border: none; color: white; border-radius: 3px; cursor: pointer; font-size: 12px; margin-top: 10px; }
+        button:hover { background: #1177bb; }
+        button:active { background: #0d5a8f; }
+        .preset-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+        .preset-buttons button { margin-top: 0; font-size: 11px; }
+        .info { background: #2d2d30; padding: 8px; border-radius: 3px; font-size: 11px; color: #858585; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>⚙ Physics Debug Panel</h1>
+    
+    <div class="control-group">
+        <h2>Movement Physics</h2>
+        
+        <div class="control">
+            <label>Walk Speed: <span class="value-display" id="walkSpeedValue">1.0</span></label>
+            <input type="range" id="walkSpeed" min="0.1" max="3.0" step="0.1" value="1.0">
+        </div>
+        
+        <div class="control">
+            <label>Climb Speed: <span class="value-display" id="climbSpeedValue">0.5</span></label>
+            <input type="range" id="climbSpeed" min="0.1" max="2.0" step="0.1" value="0.5">
+        </div>
+        
+        <div class="control">
+            <label>Max Step Up (px): <span class="value-display" id="maxStepUpValue">4</span></label>
+            <input type="range" id="maxStepUp" min="1" max="16" step="1" value="4">
+        </div>
+        
+        <div class="control">
+            <label>Max Step Down (px): <span class="value-display" id="maxStepDownValue">6</span></label>
+            <input type="range" id="maxStepDown" min="1" max="16" step="1" value="6">
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <h2>Gravity & Falling</h2>
+        
+        <div class="control">
+            <label>Gravity: <span class="value-display" id="gravityValue">0.3</span></label>
+            <input type="range" id="gravity" min="0.1" max="1.0" step="0.05" value="0.3">
+        </div>
+        
+        <div class="control">
+            <label>Terminal Velocity: <span class="value-display" id="terminalVelocityValue">4.0</span></label>
+            <input type="range" id="terminalVelocity" min="1.0" max="8.0" step="0.5" value="4.0">
+        </div>
+        
+        <div class="control">
+            <label>Safe Fall Distance (px): <span class="value-display" id="safeFallValue">48</span></label>
+            <input type="range" id="safeFall" min="16" max="128" step="8" value="48">
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <h2>Skills - Builder</h2>
+        
+        <div class="control">
+            <label>Brick Width: <span class="value-display" id="brickWidthValue">6</span></label>
+            <input type="range" id="brickWidth" min="4" max="12" step="1" value="6">
+        </div>
+        
+        <div class="control">
+            <label>Brick Height: <span class="value-display" id="brickHeightValue">2</span></label>
+            <input type="range" id="brickHeight" min="1" max="4" step="1" value="2">
+        </div>
+        
+        <div class="control">
+            <label>Step Rise: <span class="value-display" id="stepRiseValue">2</span></label>
+            <input type="range" id="stepRise" min="1" max="4" step="1" value="2">
+        </div>
+        
+        <div class="control">
+            <label>Max Bricks: <span class="value-display" id="maxBricksValue">12</span></label>
+            <input type="range" id="maxBricks" min="8" max="20" step="1" value="12">
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <h2>Skills - Digger</h2>
+        
+        <div class="control">
+            <label>Dig Width: <span class="value-display" id="digWidthValue">6</span></label>
+            <input type="range" id="digWidth" min="4" max="12" step="1" value="6">
+        </div>
+        
+        <div class="control">
+            <label>Dig Depth per Frame: <span class="value-display" id="digDepthValue">1</span></label>
+            <input type="range" id="digDepth" min="1" max="4" step="1" value="1">
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <h2>Skills - Basher/Miner</h2>
+        
+        <div class="control">
+            <label>Bash Width: <span class="value-display" id="bashWidthValue">8</span></label>
+            <input type="range" id="bashWidth" min="4" max="16" step="1" value="8">
+        </div>
+        
+        <div class="control">
+            <label>Bash Height: <span class="value-display" id="bashHeightValue">10</span></label>
+            <input type="range" id="bashHeight" min="6" max="16" step="1" value="10">
+        </div>
+        
+        <div class="control">
+            <label>Mine Angle (degrees): <span class="value-display" id="mineAngleValue">45</span></label>
+            <input type="range" id="mineAngle" min="30" max="60" step="5" value="45">
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <h2>Skills - Bomber</h2>
+        
+        <div class="control">
+            <label>Explosion Radius: <span class="value-display" id="explosionRadiusValue">16</span></label>
+            <input type="range" id="explosionRadius" min="8" max="32" step="2" value="16">
+        </div>
+        
+        <div class="control">
+            <label>Fuse Time (frames): <span class="value-display" id="fuseTimeValue">80</span></label>
+            <input type="range" id="fuseTime" min="40" max="120" step="10" value="80">
+        </div>
+    </div>
+    
+    <div class="control-group">
+        <h2>Animation Frame Counts</h2>
+        
+        <div class="control">
+            <label>Walk Right/Left: <span class="value-display" id="walkFramesValue">8</span></label>
+            <input type="range" id="walkFrames" min="1" max="16" step="1" value="8">
+        </div>
+        
+        <div class="control">
+            <label>Digger: <span class="value-display" id="digFramesValue">12</span></label>
+            <input type="range" id="digFrames" min="1" max="20" step="1" value="12">
+        </div>
+        
+        <div class="control">
+            <label>Drowning: <span class="value-display" id="drownFramesValue">16</span></label>
+            <input type="range" id="drownFrames" min="1" max="20" step="1" value="16">
+        </div>
+        
+        <div class="control">
+            <label>Climber: <span class="value-display" id="climberFramesValue">8</span></label>
+            <input type="range" id="climberFrames" min="1" max="16" step="1" value="8">
+        </div>
+        
+        <div class="control">
+            <label>Basher: <span class="value-display" id="basherFramesValue">28</span></label>
+            <input type="range" id="basherFrames" min="1" max="40" step="1" value="28">
+        </div>
+        
+        <div class="control">
+            <label>Miner: <span class="value-display" id="minerFramesValue">18</span></label>
+            <input type="range" id="minerFrames" min="1" max="30" step="1" value="18">
+        </div>
+        
+        <div class="control">
+            <label>Falling: <span class="value-display" id="fallFramesValue">8</span></label>
+            <input type="range" id="fallFrames" min="1" max="16" step="1" value="8">
+        </div>
+        
+        <div class="control">
+            <label>Blocker: <span class="value-display" id="blockerFramesValue">8</span></label>
+            <input type="range" id="blockerFrames" min="1" max="16" step="1" value="8">
+        </div>
+        
+        <div class="control">
+            <label>Builder: <span class="value-display" id="builderFramesValue">16</span></label>
+            <input type="range" id="builderFrames" min="1" max="24" step="1" value="16">
+        </div>
+        
+        <div class="control">
+            <label>Splat: <span class="value-display" id="splatFramesValue">10</span></label>
+            <input type="range" id="splatFrames" min="1" max="16" step="1" value="10">
+        </div>
+        
+        <div class="control">
+            <label>Exit: <span class="value-display" id="exitFramesValue">8</span></label>
+            <input type="range" id="exitFrames" min="1" max="16" step="1" value="8">
+        </div>
+        
+        <div class="control">
+            <label>Floater Start: <span class="value-display" id="floaterStartFramesValue">4</span></label>
+            <input type="range" id="floaterStartFrames" min="1" max="10" step="1" value="4">
+        </div>
+        
+        <div class="control">
+            <label>Floater Loop: <span class="value-display" id="floaterLoopFramesValue">4</span></label>
+            <input type="range" id="floaterLoopFrames" min="1" max="10" step="1" value="4">
+        </div>
+        
+        <div class="control">
+            <label>Bomber: <span class="value-display" id="bomberFramesValue">23</span></label>
+            <input type="range" id="bomberFrames" min="1" max="30" step="1" value="23">
+        </div>
+        
+        <div class="control">
+            <label>Burning: <span class="value-display" id="burningFramesValue">7</span></label>
+            <input type="range" id="burningFrames" min="1" max="16" step="1" value="7">
+        </div>
+    </div>
+    
+    <div class="preset-buttons">
+        <button onclick="loadPreset('original')">Original SMS</button>
+        <button onclick="loadPreset('easy')">Easy Mode</button>
+        <button onclick="loadPreset('hard')">Hard Mode</button>
+        <button onclick="resetDefaults()">Reset Defaults</button>
+    </div>
+    
+    <button onclick="exportConfig()">Export Config JSON</button>
+    
+    <div class="info">
+        Values are sent to the main game window in real-time. Adjust while playing to find the perfect feel!
+    </div>
+    
+    <script src="js/debug-panel.js"></script>
+</body>
+</html>

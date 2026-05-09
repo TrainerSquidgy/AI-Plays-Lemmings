@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Lemmings</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #000;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            color: #fff;
+        }
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        #canvas {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            background: #000;
+            border: 0;
+            outline: 0px solid #333;
+            display: block;
+            touch-action: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="canvas" width="336" height="192"></canvas>
+    </div>
+
+    <script>
+        // Web build config. Desktop packages can omit this block or set
+        // showMultiplayerTitle to false to keep the original 3-card title row.
+        window.LEMMINGS_BUILD = {
+            showMultiplayerTitle: false,
+            multiplayerUrl: 'multiplayer/index.html'
+        };
+    </script>
+
+    <script src="js/utils.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/physics.js"></script>
+    <script src="js/cursor.js"></script>
+    <script src="js/tileset.js"></script>
+    <script src="js/spritesheet.js"></script>
+    <script src="js/hatch-animation.js"></script>
+    <script src="js/tile-animations.js"></script>
+    <script src="js/trap-animations.js"></script>
+    <script src="js/png-animation-manager.js"></script>
+    <script src="js/level-loader.js"></script>
+    <script src="js/lemming.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

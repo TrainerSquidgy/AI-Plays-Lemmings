@@ -1,0 +1,344 @@
+// Sprite sheet loader and animation manager
+
+class SpriteSheet {
+    constructor() {
+        this.image = null;
+        this.animations = {};
+        this.tileWidth = 8;
+        this.tileHeight = 8;
+    }
+    
+    async load(path) {
+        const imageData = await Utils.loadIndexedImage(path);
+        this.image = imageData.image;
+        this.imageData = imageData;
+        
+        // Define all lemming animations
+        // Each animation specifies: start tile index, frame count, loop behavior
+        this.defineAnimations();
+        
+        console.log('Sprite sheet loaded:', path);
+        console.log('Animations defined:', Object.keys(this.animations).length);
+    }
+    
+    defineAnimations() {
+        // Each frame = 2 consecutive tiles (top, bottom)
+        // Just count tiles linearly through the sprite sheet
+        
+        let tileIndex = 0;
+        
+        // 1. Walking Right (8 frames = 16 tiles)
+        this.animations.walkRight = {
+            startTile: tileIndex,
+            frameCount: 8,
+            loop: true
+        };
+        tileIndex += 16;
+        
+        // 2. Walking Left (8 frames = 16 tiles)
+        this.animations.walkLeft = {
+            startTile: tileIndex,
+            frameCount: 8,
+            loop: true
+        };
+        tileIndex += 16;
+        
+        // 3. Digger (12 frames = 24 tiles)
+        this.animations.digging = {
+            startTile: tileIndex,
+            frameCount: 12,
+            loop: true
+        };
+        tileIndex += 24;
+        
+        // 4. Drowning (16 frames = 32 tiles)
+        this.animations.drowning = {
+            startTile: tileIndex,
+            frameCount: 16,
+            loop: false
+        };
+        tileIndex += 32;
+        
+        // 5. Climber Right (8 frames = 16 tiles)
+        this.animations.climbRight = {
+            startTile: tileIndex,
+            frameCount: 8,
+            loop: true
+        };
+        tileIndex += 16;
+        
+        // 6. Climber Left (8 frames = 16 tiles)
+        this.animations.climbLeft = {
+            startTile: tileIndex,
+            frameCount: 8,
+            loop: true
+        };
+        tileIndex += 16;
+        
+        // 7. Basher Right (28 frames = 56 tiles)
+        this.animations.bashRight = {
+            startTile: tileIndex,
+            frameCount: 28,
+            loop: true
+        };
+        tileIndex += 56;
+        
+        // 8. Basher Left (28 frames = 56 tiles)
+        this.animations.bashLeft = {
+            startTile: tileIndex,
+            frameCount: 28,
+            loop: true
+        };
+        tileIndex += 56;
+        
+        // 9. Miner Right (17 frames = 34 tiles)
+        this.animations.mineRight = {
+            startTile: tileIndex,
+            frameCount: 17,
+            loop: true
+        };
+        tileIndex += 34;
+        
+        // 10. Miner Left (18 frames = 36 tiles)
+        this.animations.mineLeft = {
+            startTile: tileIndex,
+            frameCount: 18,
+            loop: true
+        };
+        tileIndex += 36;
+        
+        // 11. Falling (8 frames = 16 tiles)
+        this.animations.falling = {
+            startTile: tileIndex,
+            frameCount: 8,
+            loop: true
+        };
+        tileIndex += 16;
+        
+        // 12. Blocker (8 frames = 16 tiles)
+        this.animations.blocking = {
+            startTile: tileIndex,
+            frameCount: 8,
+            loop: true
+        };
+        tileIndex += 16;
+        
+        // 13. Builder Right (16 frames = 32 tiles)
+        this.animations.buildRight = {
+            startTile: tileIndex,
+            frameCount: 16,
+            loop: true
+        };
+        tileIndex += 32;
+        
+        // 14. Builder Left (16 frames = 32 tiles)
+        this.animations.buildLeft = {
+            startTile: tileIndex,
+            frameCount: 16,
+            loop: true
+        };
+        tileIndex += 32;
+        
+        // 15. Splat (10 frames = 20 tiles)
+        this.animations.splat = {
+            startTile: tileIndex,
+            frameCount: 10,
+            loop: false
+        };
+        tileIndex += 20;
+        
+        // 16. Exit (8 frames = 16 tiles)
+        this.animations.exiting = {
+            startTile: tileIndex,
+            frameCount: 8,
+            loop: false
+        };
+        tileIndex += 16;
+        
+        // 17. Floater Start (5 frames = 10 tiles)
+        this.animations.floaterStart = {
+            startTile: tileIndex,
+            frameCount: 5,
+            loop: false,
+            nextAnimation: 'floaterLoop'
+        };
+        tileIndex += 10;
+        
+        // 18. Floater Loop (3 frames = 6 tiles)
+        this.animations.floaterLoop = {
+            startTile: tileIndex,
+            frameCount: 3,
+            loop: true
+        };
+        tileIndex += 6;
+        
+        // 19. Bomber (23 frames = 46 tiles)
+        this.animations.exploding = {
+            startTile: tileIndex,
+            frameCount: 23,
+            loop: false
+        };
+        tileIndex += 46;
+        
+        // 20. Burning/Fire (7 frames = 14 tiles)
+        this.animations.burning = {
+            startTile: tileIndex,
+            frameCount: 7,
+            loop: false
+        };
+        tileIndex += 14;
+        
+        console.log('Total tiles used:', tileIndex);
+    }
+    
+    // Get the animation for a lemming's current state
+    getAnimation(lemming) {
+        const state = lemming.state;
+        const direction = lemming.direction;
+        
+        switch (state) {
+            case 'walking':
+                return direction > 0 ? this.animations.walkRight : this.animations.walkLeft;
+                
+            case 'falling':
+                return this.animations.falling;
+                
+            case 'climbing':
+                return direction > 0 ? this.animations.climbRight : this.animations.climbLeft;
+                
+            case 'digging':
+                return this.animations.digging;
+                
+            case 'building':
+                return direction > 0 ? this.animations.buildRight : this.animations.buildLeft;
+                
+            case 'bashing':
+                return direction > 0 ? this.animations.bashRight : this.animations.bashLeft;
+                
+            case 'mining':
+                return direction > 0 ? this.animations.mineRight : this.animations.mineLeft;
+                
+            case 'blocking':
+                return this.animations.blocking;
+                
+            case 'floating':
+                // Check if we need to play start animation
+                if (lemming.floaterAnimPhase === 'start') {
+                    return this.animations.floaterStart;
+                }
+                return this.animations.floaterLoop;
+                
+            case 'exploding':
+                return this.animations.exploding;
+                
+            case 'drowning':
+                return this.animations.drowning;
+                
+            case 'burning':
+                return this.animations.burning;
+                
+            case 'splatting':
+                return this.animations.splat;
+                
+            case 'exiting':
+                return this.animations.exiting;
+                
+            default:
+                return this.animations.falling;
+        }
+    }
+    
+    // Draw a single frame of an animation
+    drawFrame(ctx, animation, frameNumber, x, y, flipX = false) {
+        if (!animation) return;
+        
+        // Each frame takes 2 consecutive tile positions: top tile, then bottom tile
+        // They flow linearly across rows (8 tiles per row)
+        const tileIndex = (animation.startTile + frameNumber) * 2; // Each frame = 2 tiles
+        
+        const tilesPerRow = 8;
+        
+        // Top tile
+        const topTileX = (tileIndex % tilesPerRow) * this.tileWidth;
+        const topTileY = Math.floor(tileIndex / tilesPerRow) * this.tileHeight;
+        
+        // Bottom tile (next tile in sequence)
+        const bottomTileX = ((tileIndex + 1) % tilesPerRow) * this.tileWidth;
+        const bottomTileY = Math.floor((tileIndex + 1) / tilesPerRow) * this.tileHeight;
+        
+        ctx.save();
+        
+        if (flipX) {
+            ctx.scale(-1, 1);
+            x = -x - this.tileWidth;
+        }
+        
+        // For sprite rendering, we need to treat magenta (RGB 255,0,255) as transparent
+        // We'll use a temporary canvas to process this
+        if (!this.tempCanvas) {
+            this.tempCanvas = document.createElement('canvas');
+            this.tempCanvas.width = this.tileWidth;
+            this.tempCanvas.height = this.tileHeight * 2;
+            this.tempCtx = this.tempCanvas.getContext('2d', { willReadFrequently: true });
+        }
+        
+        // Clear temp canvas
+        this.tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
+        
+        // Draw both tiles to temp canvas
+        this.tempCtx.drawImage(
+            this.image,
+            topTileX, topTileY,
+            this.tileWidth, this.tileHeight,
+            0, 0,
+            this.tileWidth, this.tileHeight
+        );
+        
+        this.tempCtx.drawImage(
+            this.image,
+            bottomTileX, bottomTileY,
+            this.tileWidth, this.tileHeight,
+            0, this.tileHeight,
+            this.tileWidth, this.tileHeight
+        );
+        
+        // Get image data and make magenta pixels transparent
+        const imageData = this.tempCtx.getImageData(0, 0, this.tileWidth, this.tileHeight * 2);
+        const data = imageData.data;
+        
+        for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            
+            // If pixel is magenta (255, 0, 255) or close to it, make it transparent
+            if (r > 250 && g < 10 && b > 250) {
+                data[i + 3] = 0; // Set alpha to 0
+            }
+        }
+        
+        this.tempCtx.putImageData(imageData, 0, 0);
+        
+        // Draw the processed image to main canvas
+        ctx.drawImage(this.tempCanvas, x, y);
+        
+        ctx.restore();
+    }
+    
+    // Draw a lemming with the correct animation
+    draw(ctx, lemming, x, y) {
+        const animation = this.getAnimation(lemming);
+        if (!animation) return;
+        
+        // Get current frame (wrapping if looping)
+        let frame = lemming.frame;
+        
+        if (animation.loop) {
+            frame = frame % animation.frameCount;
+        } else {
+            frame = Math.min(frame, animation.frameCount - 1);
+        }
+        
+        this.drawFrame(ctx, animation, frame, x, y, false);
+    }
+}
