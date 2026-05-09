@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lemmings RL Lab</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body { min-height: 100%; }
+        body {
+            margin: 0;
+            background: #101010;
+            color: #f7f1df;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+        .lab-shell {
+            height: 100vh;
+            display: grid;
+            grid-template-rows: auto auto auto minmax(0, 1fr);
+            overflow: hidden;
+        }
+        .lab-header {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            align-items: center;
+            padding: 14px 18px;
+            border-bottom: 1px solid #2d2a25;
+            background: #171511;
+        }
+        h1 {
+            margin: 0;
+            font-size: 22px;
+            line-height: 1.15;
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+        .subtitle {
+            margin-top: 4px;
+            color: #beb7a5;
+            font-size: 13px;
+        }
+        .controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        label {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            color: #ded6c5;
+            font-size: 13px;
+        }
+        input {
+            width: 94px;
+            border: 1px solid #4c463a;
+            border-radius: 6px;
+            background: #0f0e0c;
+            color: #fff8e8;
+            padding: 7px 8px;
+            font: 600 13px Consolas, monospace;
+            text-transform: uppercase;
+        }
+        button {
+            border: 1px solid #4c463a;
+            border-radius: 6px;
+            background: #252119;
+            color: #fff8e8;
+            padding: 7px 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        button:hover, button.active {
+            background: #3a3020;
+            border-color: #ffd84d;
+        }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 1px;
+            background: #2d2a25;
+            border-bottom: 1px solid #2d2a25;
+        }
+        .summary-item {
+            background: #151412;
+            padding: 10px 18px;
+        }
+        .summary-label {
+            display: block;
+            color: #a9a08e;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        .summary-value {
+            display: block;
+            margin-top: 2px;
+            color: #fff4cf;
+            font: 700 20px Consolas, monospace;
+        }
+        .director-strip {
+            display: grid;
+            grid-template-columns: 220px 1fr 1.2fr;
+            gap: 1px;
+            background: #2d2a25;
+            border-bottom: 1px solid #2d2a25;
+        }
+        .director-item {
+            min-width: 0;
+            background: #191612;
+            padding: 9px 18px;
+        }
+        .director-label {
+            display: block;
+            color: #a9a08e;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        .director-value {
+            display: block;
+            margin-top: 2px;
+            overflow: hidden;
+            color: #fff4cf;
+            font: 700 14px Consolas, monospace;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .theater {
+            display: grid;
+            grid-template-rows: minmax(0, 1fr) auto;
+            gap: 8px;
+            min-height: 0;
+            padding: 10px;
+        }
+        .spotlight-stage {
+            display: grid;
+            min-height: 0;
+        }
+        .spotlight-empty {
+            display: grid;
+            min-height: 260px;
+            place-items: center;
+            border: 1px solid #2d2a25;
+            border-radius: 8px;
+            background: #050505;
+            color: #a9a08e;
+            font-weight: 700;
+        }
+        .run-grid {
+            position: relative;
+            display: grid;
+            gap: 8px;
+            grid-template-columns: repeat(9, minmax(0, 1fr));
+            align-content: start;
+        }
+        .run-tile {
+            --accent: #ffd84d;
+            overflow: hidden;
+            border: 1px solid #2d2a25;
+            border-bottom-color: var(--accent);
+            border-radius: 8px;
+            background: #050505;
+            min-width: 0;
+        }
+        .run-tile[data-best="1"] {
+            box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent), transparent 35%);
+        }
+        .run-tile[data-spotlight="1"] {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent), 0 0 18px color-mix(in srgb, var(--accent), transparent 72%);
+        }
+        .spotlight-stage .run-tile {
+            display: grid;
+            grid-template-rows: minmax(0, 1fr) auto;
+            min-height: 0;
+        }
+        .spotlight-stage .frame-wrap {
+            aspect-ratio: auto;
+            min-height: 0;
+        }
+        .run-tile[data-visible="0"] {
+            position: absolute;
+            left: -10000px;
+            top: 0;
+            width: 336px;
+            height: 192px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .run-tile[data-spotlight="1"] .run-footer {
+            background: #1f1a11;
+        }
+        .run-tile[data-spotlight="1"] .run-name::before {
+            content: "SPOTLIGHT ";
+            color: var(--accent);
+        }
+        .frame-wrap {
+            position: relative;
+            aspect-ratio: 336 / 192;
+            background: #000;
+        }
+        .sim-stat-panel {
+            display: grid;
+            grid-template-rows: auto auto 9px auto;
+            gap: 6px;
+            min-height: 92px;
+            padding: 10px;
+            background: #080807;
+        }
+        .sim-rank {
+            color: var(--accent);
+            font: 800 13px Consolas, monospace;
+        }
+        .sim-level {
+            overflow: hidden;
+            color: #fff4cf;
+            font: 800 12px Consolas, monospace;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .sim-meter {
+            --fill: 0%;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #24211d;
+        }
+        .sim-meter::before {
+            display: block;
+            width: var(--fill);
+            height: 100%;
+            background: var(--accent);
+            content: "";
+        }
+        .sim-detail {
+            overflow: hidden;
+            color: #beb7a5;
+            font: 700 11px Consolas, monospace;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background: #000;
+        }
+        .run-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 6px 7px;
+            border-top: 1px solid #24211d;
+            color: #d8cfbd;
+            font-size: 11px;
+            line-height: 1.2;
+        }
+        .run-name {
+            color: #fff4cf;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .run-stats {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: right;
+        }
+        @media (max-width: 1100px) {
+            .lab-header { grid-template-columns: 1fr; }
+            .controls { justify-content: flex-start; }
+            .summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .director-strip { grid-template-columns: 1fr; }
+            .run-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 700px) {
+            .lab-shell {
+                height: auto;
+                min-height: 100vh;
+                overflow: visible;
+            }
+            .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .run-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .spotlight-stage .frame-wrap {
+                aspect-ratio: 336 / 192;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="lab-shell">
+        <header class="lab-header">
+            <div>
+                <h1>Lemmings RL Lab</h1>
+                <div class="subtitle">Parallel curiosity runs using the existing engine, MLM/INI loading, live rewards, and visible skill experiments.</div>
+            </div>
+            <div class="controls">
+                <label>Level <input id="level-input" value="FUN_01" aria-label="Level id"></label>
+                <button type="button" data-runs="40">40 Sims</button>
+                <button type="button" data-runs="80">80 Sims</button>
+                <button type="button" data-runs="120">120 Sims</button>
+                <button type="button" id="restart-runs">Restart</button>
+            </div>
+        </header>
+        <section class="summary" aria-label="Run summary">
+            <div class="summary-item"><span class="summary-label">Sim Runs</span><span class="summary-value" id="summary-live">0/0</span></div>
+            <div class="summary-item"><span class="summary-label">Best Saved</span><span class="summary-value" id="summary-best">0%</span></div>
+            <div class="summary-item"><span class="summary-label">Best Reward</span><span class="summary-value" id="summary-reward">0</span></div>
+            <div class="summary-item"><span class="summary-label">Recent Actions</span><span class="summary-value" id="summary-actions">0</span></div>
+            <div class="summary-item"><span class="summary-label">Replay Pool</span><span class="summary-value" id="summary-explored">0</span></div>
+            <div class="summary-item"><span class="summary-label">GPU Trainer</span><span class="summary-value" id="summary-trainer">0/0</span></div>
+        </section>
+        <section class="director-strip" aria-label="Director selection">
+            <div class="director-item"><span class="director-label">Spotlight</span><span class="director-value" id="director-run">Waiting</span></div>
+            <div class="director-item"><span class="director-label">Why It Matters</span><span class="director-value" id="director-reason">Looking for the strongest run</span></div>
+            <div class="director-item"><span class="director-label">Latest Beat</span><span class="director-value" id="director-event">No events yet</span></div>
+        </section>
+        <section class="theater" aria-label="Theater view">
+            <section id="spotlight-stage" class="spotlight-stage" aria-label="Spotlight run">
+                <div id="spotlight-empty" class="spotlight-empty">Waiting for a promising run</div>
+            </section>
+            <section id="run-grid" class="run-grid" data-runs="40" aria-label="Promising contender runs"></section>
+        </section>
+    </main>
+    <script src="js/rl-dashboard.js"></script>
+</body>
+</html>

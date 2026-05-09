@@ -58,7 +58,10 @@ function gameLoop(currentTime) {
 
     if (deltaTime >= TARGET_FRAME_MS) {
         game.update();
-        game.render();
+        const rlEnv = window.lemmingsRLEnv;
+        if (!rlEnv?.shouldRenderFrame || rlEnv.shouldRenderFrame()) {
+            game.render();
+        }
         lastTime = currentTime - (deltaTime % TARGET_FRAME_MS);
 
         frameCount++;

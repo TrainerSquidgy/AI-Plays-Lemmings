@@ -10,7 +10,7 @@ try {
   WebSocketServer = null;
 }
 
-const PORT = Number(process.env.PORT || 3003);
+const PORT = Number(process.env.PORT || 3004);
 const ROOT_DIR = __dirname;
 const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const CUSTOM_LEVELS_DIR = path.join(PUBLIC_DIR, 'custom-levels');
